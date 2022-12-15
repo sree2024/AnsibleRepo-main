@@ -1,0 +1,19 @@
+---
+# tasks file for counterapp
+- name: JDK Installation
+  apt:
+    name: default-jdk
+    update_cache: yes
+
+- name: Install Tomcat Apache
+  apt: name={{ item }} state=latest
+  loop:
+    - tomcat9
+    - tomcat9-admin
+
+- name: Deploy FIle on Remote Server
+  copy: src=config.properties dest=/opt/config.properties remote_src=no
+
+- name: Deploy Template File Remotely
+  template: src=config.j2 dest=/opt/config.json 
+  notify: Restart Tomcat9 Service
